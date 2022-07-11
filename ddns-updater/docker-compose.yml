@@ -1,0 +1,27 @@
+networks:
+  proxy:
+    external: true
+
+services:
+  ddns:
+    image: qmcgaw/ddns-updater
+    container_name: ddns
+    restart: unless-stopped
+    networks:
+      - proxy
+    volumes:
+      - /homelab/ddns-updater/data:/updater/data
+      - ./config/credentials.json:/updater/data/config.json:ro
+    labels:
+      # HTTP
+      - traefik.enable=true
+      - traefik.http.routers.ddns.rule=Host(`${HOSTNAME}`)
+      - traefik.http.routers.ddns.entrypoints=web
+      - traefik.http.routers.ddns.middlewares=ddns-https-redirect
+      - traefik.http.middlewares.ddns-https-redirect.redirectscheme.scheme=websecure
+      - traefik.http.services.ddns.loadbalancer.server.port=8000
+      # HTTPS
+      - traefik.http.routers.ddns-secure.tls=true
+      - traefik.http.routers.ddns-secure.rule=Host(`${HOSTNAME}`)
+      - traefik.http.routers.ddns-secure.entrypoints=websecure
+      - traefik.http.routers.ddns-secure.tls.certresolver=production
