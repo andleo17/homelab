@@ -15,14 +15,14 @@ certificatesResolvers:
   staging:
     acme:
       email: mail@example.com # Cambiar correo
-      storage: /homelab/traefik/data/certs/staging.json
+      storage: /etc/traefik/certs/staging.json
       caServer: 'https://acme-staging-v02.api.letsencrypt.org/directory'
       httpChallenge:
         entryPoint: web
   production:
     acme:
       email: mail@example.com # Cambiar correo
-      storage: /homelab/traefik/data/certs/production.json
+      storage: /etc/traefik/certs/production.json
       caServer: 'https://acme-v02.api.letsencrypt.org/directory'
       httpChallenge:
         entryPoint: web
@@ -32,5 +32,5 @@ providers:
     exposedByDefault: false
     network: proxy
   file:
-    directory: /homelab/traefik/data
+    directory: /etc/traefik
     watch: true
