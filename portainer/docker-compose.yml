@@ -1,0 +1,27 @@
+networks:
+  proxy:
+    external: true
+
+services:
+  portainer:
+    image: 'portainer/portainer-ce'
+    container_name: portainer
+    restart: unless-stopped
+    networks:
+      - proxy
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /homelab/portainer/data:/data
+    labels:
+      # HTTP
+      - traefik.enable=true
+      - traefik.http.routers.portainer.rule=Host(`${HOSTNAME}`)
+      - traefik.http.routers.portainer.entrypoints=web
+      - traefik.http.routers.portainer.middlewares=portainer-https-redirect
+      - traefik.http.middlewares.portainer-https-redirect.redirectscheme.scheme=websecure
+      - traefik.http.services.portainer.loadbalancer.server.port=9000
+      # HTTPS
+      - traefik.http.routers.portainer-secure.tls=true
+      - traefik.http.routers.portainer-secure.rule=Host(`${HOSTNAME}`)
+      - traefik.http.routers.portainer-secure.entrypoints=websecure
+      - traefik.http.routers.portainer-secure.tls.certresolver=production
