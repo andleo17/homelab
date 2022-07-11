@@ -18,6 +18,8 @@ services:
     volumes:
       - /homelab/pihole/data:/etc/pihole
       - /homelab/pihole/dnsmasq.d:/etc/dnsmasq.d
+    env_file:
+      - .env
     labels:
       # HTTP
       - traefik.enable=true

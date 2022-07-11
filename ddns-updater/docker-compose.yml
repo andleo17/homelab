@@ -12,6 +12,8 @@ services:
     volumes:
       - /homelab/ddns-updater/data:/updater/data
       - ./config/credentials.json:/updater/data/config.json:ro
+    env_file:
+      - .env
     labels:
       # HTTP
       - traefik.enable=true

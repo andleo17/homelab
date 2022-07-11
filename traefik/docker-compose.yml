@@ -17,6 +17,8 @@ services:
       - /homelab/traefik/data:/etc/traefik
       - ./config/traefik.yml:/etc/traefik/traefik.yml:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
+    env_file:
+      - .env
     labels:
       # HTTP
       - traefik.enable=true
