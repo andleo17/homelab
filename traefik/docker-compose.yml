@@ -20,15 +20,9 @@ services:
     env_file:
       - .env
     labels:
-      # HTTP
-      - traefik.enable=true
-      - traefik.http.routers.traefik.rule=Host(`${HOSTNAME}`)
-      - traefik.http.routers.traefik.entrypoints=web
-      - traefik.http.routers.traefik.service=api@internal
-      - traefik.http.routers.traefik.middlewares=traefik-https-redirect
-      - traefik.http.middlewares.traefik-https-redirect.redirectscheme.scheme=websecure
       # HTTPS
       - traefik.http.routers.traefik-secure.tls=true
       - traefik.http.routers.traefik-secure.rule=Host(`${HOSTNAME}`)
       - traefik.http.routers.traefik-secure.entrypoints=websecure
       - traefik.http.routers.traefik-secure.tls.certresolver=production
+      - traefik.http.routers.traefik-secure.service=api@internal
