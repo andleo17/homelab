@@ -1,0 +1,32 @@
+networks:
+  proxy:
+    external: true
+
+services:
+  traefik:
+    image: traefik
+    container_name: traefik
+    restart: unless-stopped
+    ports:
+      - 80:80
+      - 443:443
+    networks:
+      - proxy
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /homelab/traefik/data:/etc/traefik
+      - ./config/traefik.yml:/etc/traefik.yml:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    labels:
+      # HTTP
+      - traefik.enable=true
+      - traefik.http.routers.traefik.rule=Host(`${HOSTNAME}`)
+      - traefik.http.routers.traefik.entrypoints=web
+      - traefik.http.routers.traefik.service=api@internal
+      - traefik.http.routers.traefik.middlewares=traefik-https-redirect
+      - traefik.http.middlewares.traefik-https-redirect.redirectscheme.scheme=websecure
+      # HTTPS
+      - traefik.http.routers.traefik-secure.tls=true
+      - traefik.http.routers.traefik-secure.rule=Host(`${HOSTNAME}`)
+      - traefik.http.routers.traefik-secure.entrypoints=websecure
+      - traefik.http.routers.traefik-secure.tls.certresolver=production
