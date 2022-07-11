@@ -32,5 +32,5 @@ providers:
     exposedByDefault: false
     network: proxy
   file:
-    directory: /etc/traefik
+    directory: /homelab/traefik/data
     watch: true
