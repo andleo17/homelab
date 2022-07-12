@@ -1,9 +1,14 @@
-host: 0.0.0.0
-port: 9001
-log_level: debug
 theme: dark
 jwt_secret: secret # Cambiar esto
 default_redirection_url: https://auth.example.com # Cambiar esto
+
+server:
+  host: 0.0.0.0
+  port: 9001
+
+log:
+  level: debug
+
 totp:
   issuer: authelia.com
 
@@ -20,12 +25,18 @@ authentication_backend:
 
 access_control:
   default_policy: deny
+  rules:
+    - domain: 'www.example.com'
+      policy: bypass
+    - domain: '*.example.com'
+      policy: two_factor
 
 session:
   name: authelia_session
   secret: secret # Cambiar esto
-  expiration: 3600 # 1 hora
-  inactivity: 300 # 5 minutos
+  expiration: 1h
+  inactivity: 5m
+  remember_me_duration: 1M
   domain: example.com # Cambiar esto
 
 regulation:
