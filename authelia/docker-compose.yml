@@ -1,0 +1,27 @@
+networks:
+  proxy:
+    external: true
+
+services:
+  authelia:
+    image: authelia/authelia
+    container_name: authelia
+    restart: unless-stopped
+    networks:
+      - proxy
+    expose:
+      - 9001
+    volumes:
+      - ./config:/config
+    env_file:
+      - .env
+    labels:
+      # HTTPS
+      - traefik.enable=true
+      - traefik.http.routers.authelia-secure.tls=true
+      - traefik.http.routers.authelia-secure.rule=Host(`${HOSTNAME}`)
+      - traefik.http.routers.authelia-secure.entrypoints=websecure
+      - traefik.http.routers.authelia-secure.tsl.certresolver=production
+      - traefik.http.middlewares.authelia-secure.forwardauth.address=http://authelia:9001/api/verify?rd=https://${HOSTNAME}
+      - traefik.http.middlewares.authelia-secure.forwardauth.trustForwardHeader=true
+      - traefik.http.middlewares.authelia-secure.forwardauth.authResponseHeaders=Remote-user,Remote-Groups,Remote-Name,Remote-Email

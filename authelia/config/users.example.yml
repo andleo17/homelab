@@ -1,0 +1,8 @@
+users:
+  authelia:
+    displayname: 'Authelia User'
+    password: '$argon2id$v=19$m=65536,t=3,p=4$b2J0TmtSNVdSWWhXRWpaOQ$yMIJ58H0Z0vADekaCdENLrqZgw6yc0HWhRvb4S9696g'
+    email: 'email@example.com'
+    groups:
+      - admins
+      - dev

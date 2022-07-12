@@ -2,3 +2,5 @@
 **/data
 **/credentials.json
 **/traefik.yml
+**/configuration.yml
+**/users.yml
