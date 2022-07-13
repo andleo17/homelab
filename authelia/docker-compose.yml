@@ -24,6 +24,6 @@ services:
       - traefik.http.routers.authelia-secure.rule=Host(`${HOSTNAME}`)
       - traefik.http.routers.authelia-secure.entrypoints=websecure
       - traefik.http.routers.authelia-secure.tls.certresolver=production
-      - traefik.http.middlewares.authelia-secure.forwardAuth.address=http://authelia:9001/api/verify?rd=https://${HOSTNAME}
-      - traefik.http.middlewares.authelia-secure.forwardAuth.trustForwardHeader=true
-      - traefik.http.middlewares.authelia-secure.forwardAuth.authResponseHeaders=Remote-user,Remote-Groups,Remote-Name,Remote-Email
+      - traefik.http.middlewares.authelia.forwardAuth.address=http://authelia:9001/api/verify?rd=https://${HOSTNAME}
+      - traefik.http.middlewares.authelia.forwardAuth.trustForwardHeader=true
+      - traefik.http.middlewares.authelia.forwardAuth.authResponseHeaders=Remote-user,Remote-Groups,Remote-Name,Remote-Email
