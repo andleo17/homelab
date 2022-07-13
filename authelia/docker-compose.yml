@@ -12,7 +12,9 @@ services:
     expose:
       - 9001
     volumes:
-      - ./config:/config
+      - /homelab/authelia/data/:/data
+      - ./config/users.yml:/data/users.yml
+      - ./config/configuration.yml:/config/configuration.yml
     env_file:
       - .env
     labels:
@@ -21,7 +23,7 @@ services:
       - traefik.http.routers.authelia-secure.tls=true
       - traefik.http.routers.authelia-secure.rule=Host(`${HOSTNAME}`)
       - traefik.http.routers.authelia-secure.entrypoints=websecure
-      - traefik.http.routers.authelia-secure.tsl.certresolver=production
-      - traefik.http.middlewares.authelia-secure.forwardauth.address=http://authelia:9001/api/verify?rd=https://${HOSTNAME}
-      - traefik.http.middlewares.authelia-secure.forwardauth.trustForwardHeader=true
-      - traefik.http.middlewares.authelia-secure.forwardauth.authResponseHeaders=Remote-user,Remote-Groups,Remote-Name,Remote-Email
+      - traefik.http.routers.authelia-secure.tls.certresolver=production
+      - traefik.http.middlewares.authelia-secure.forwardAuth.address=http://authelia:9001/api/verify?rd=https://${HOSTNAME}
+      - traefik.http.middlewares.authelia-secure.forwardAuth.trustForwardHeader=true
+      - traefik.http.middlewares.authelia-secure.forwardAuth.authResponseHeaders=Remote-user,Remote-Groups,Remote-Name,Remote-Email
