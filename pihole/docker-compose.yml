@@ -4,7 +4,7 @@ networks:
 
 services:
   pihole:
-    image: pihole/pihole
+    image: pihole/pihole:latest
     container_name: pihole
     restart: unless-stopped
     ports:
@@ -33,3 +33,4 @@ services:
       - traefik.http.routers.pihole-secure.rule=Host(`${HOSTNAME}`)
       - traefik.http.routers.pihole-secure.entrypoints=websecure
       - traefik.http.routers.pihole-secure.tls.certresolver=production
+      - traefik.http.routers.pihole-secure.middlewares=authelia@docker

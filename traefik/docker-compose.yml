@@ -4,7 +4,7 @@ networks:
 
 services:
   traefik:
-    image: traefik
+    image: traefik:latest
     container_name: traefik
     restart: unless-stopped
     ports:
@@ -27,3 +27,4 @@ services:
       - traefik.http.routers.traefik-secure.entrypoints=websecure
       - traefik.http.routers.traefik-secure.tls.certresolver=production
       - traefik.http.routers.traefik-secure.service=api@internal
+      - traefik.http.routers.traefik-secure.middlewares=authelia@docker

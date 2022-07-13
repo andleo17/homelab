@@ -4,7 +4,7 @@ networks:
 
 services:
   authelia:
-    image: authelia/authelia
+    image: authelia/authelia:latest
     container_name: authelia
     restart: unless-stopped
     networks:

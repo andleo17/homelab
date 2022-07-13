@@ -56,3 +56,21 @@ notifier:
     sender: admin@example.com # Cambiar esto
     host: smtp.gmail.com
     port: 587
+
+identity_providers:
+  oidc:
+    hmac_secret: this_is_a_secret_abc123abc123abc # Cambiar esto
+    issuer_private_key: this_is_a_secret_abc123abc123abc # Cambiar esto
+    clients:
+      - id: portainer
+        secret: this_is_a_secret_abc123abc123abc # Cambiar esto
+        public: false
+        authorization_policy: two_factor
+        scopes:
+          - openid
+          - profile
+          - groups
+          - email
+        redirect_uris:
+          - https://portainer.example.com
+        userinfo_signing_algorithm: none

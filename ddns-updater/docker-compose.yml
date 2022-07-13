@@ -4,7 +4,7 @@ networks:
 
 services:
   ddns:
-    image: qmcgaw/ddns-updater
+    image: qmcgaw/ddns-updater:latest
     container_name: ddns
     restart: unless-stopped
     networks:
@@ -27,3 +27,4 @@ services:
       - traefik.http.routers.ddns-secure.rule=Host(`${HOSTNAME}`)
       - traefik.http.routers.ddns-secure.entrypoints=websecure
       - traefik.http.routers.ddns-secure.tls.certresolver=production
+      - traefik.http.routers.ddns-secure.middlewares=authelia@docker
