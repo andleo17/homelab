@@ -1,0 +1,30 @@
+networks:
+  proxy:
+    external: true
+
+services:
+  homer:
+    image: b4bz/homer:latest
+    container_name: homer
+    restart: unless-stopped
+    networks:
+      - proxy
+    volumes:
+      - ./assets:/www/assets/
+    env_file:
+      - .env
+    user: 1000:1000
+    labels:
+      # HTTP
+      - traefik.enable=true
+      - traefik.http.routers.homer.rule=Host(`${HOSTNAME}`)
+      - traefik.http.routers.homer.entrypoints=web
+      - traefik.http.routers.homer.middlewares=homer-https-redirect
+      - traefik.http.middlewares.homer-https-redirect.redirectscheme.scheme=websecure
+      - traefik.http.services.homer.loadbalancer.server.port=8080
+      # HTTPS
+      - traefik.http.routers.homer-secure.tls=true
+      - traefik.http.routers.homer-secure.rule=Host(`${HOSTNAME}`)
+      - traefik.http.routers.homer-secure.entrypoints=websecure
+      - traefik.http.routers.homer-secure.tls.certresolver=production
+      - traefik.http.routers.homer-secure.middlewares=authelia@docker
