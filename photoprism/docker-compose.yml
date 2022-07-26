@@ -13,6 +13,8 @@ services:
       - ~/Imagenes:/photoprism/originals
       - /homelab/photoprism/data/storage:/photoprism/storage
       - /homelab/photoprism/data/import:/photoprism/import
+    env_file:
+      - .env
     labels:
       # HTTP
       - traefik.enable=true
