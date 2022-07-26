@@ -1,0 +1,29 @@
+networks:
+  proxy:
+    external: true
+
+services:
+  photoprism:
+    image: photoprism/photoprism:latest
+    container_name: photoprism
+    restart: unless-stopped
+    networks:
+      - proxy
+    volumes:
+      - ~/Imagenes:/photoprism/originals
+      - /homelab/photoprism/data/storage:/photoprism/storage
+      - /homelab/photoprism/data/import:/photoprism/import
+    labels:
+      # HTTP
+      - traefik.enable=true
+      - traefik.http.routers.photoprism.rule=Host(`${HOSTNAME}`)
+      - traefik.http.routers.photoprism.entrypoints=web
+      - traefik.http.routers.photoprism.middlewares=photoprism-https-redirect
+      - traefik.http.middlewares.photoprism-https-redirect.redirectscheme.scheme=websecure
+      - traefik.http.services.photoprism.loadbalancer.server.port=2342
+      # HTTPS
+      - traefik.http.routers.photoprism-secure.tls=true
+      - traefik.http.routers.photoprism-secure.rule=Host(`${HOSTNAME}`)
+      - traefik.http.routers.photoprism-secure.entrypoints=websecure
+      - traefik.http.routers.photoprism-secure.tls.certresolver=production
+      - traefik.http.routers.photoprism-secure.middlewares=authelia@docker
