@@ -5,4 +5,6 @@
 **/configuration.yml
 **/users.yml
 **/config.yml
+**/config.json
 homer/assets/tools
+*.db
