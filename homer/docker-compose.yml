@@ -21,7 +21,6 @@ services:
       - traefik.http.routers.homer.entrypoints=web
       - traefik.http.routers.homer.middlewares=homer-https-redirect
       - traefik.http.middlewares.homer-https-redirect.redirectscheme.scheme=websecure
-      - traefik.http.services.homer.loadbalancer.server.port=8080
       # HTTPS
       - traefik.http.routers.homer-secure.tls=true
       - traefik.http.routers.homer-secure.rule=Host(`${HOSTNAME}`)
