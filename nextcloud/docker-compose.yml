@@ -56,7 +56,6 @@ services:
       - internal
     volumes:
       - /homelab/nextcloud/data:/var/www/html
-      - /home:/var/www/html/data
     env_file:
       - .env
     environment:
