@@ -20,13 +20,13 @@ services:
     labels:
       # HTTP
       - traefik.enable=true
-      - traefik.http.routers.firefly.rule=Host(`${HOSTNAME}`)
+      - traefik.http.routers.firefly.rule=Host(`${APP_URL}`)
       - traefik.http.routers.firefly.entrypoints=web
       - traefik.http.routers.firefly.middlewares=firefly-https-redirect
       - traefik.http.middlewares.firefly-https-redirect.redirectscheme.scheme=websecure
       # HTTPS
       - traefik.http.routers.firefly-secure.tls=true
-      - traefik.http.routers.firefly-secure.rule=Host(`${HOSTNAME}`)
+      - traefik.http.routers.firefly-secure.rule=Host(`${APP_URL}`)
       - traefik.http.routers.firefly-secure.entrypoints=websecure
       - traefik.http.routers.firefly-secure.tls.certresolver=production
       - traefik.http.routers.firefly-secure.middlewares=authelia@docker
