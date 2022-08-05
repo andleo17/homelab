@@ -8,8 +8,6 @@ services:
     image: fireflyiii/core:latest
     container_name: firefly
     restart: unless-stopped
-    ports:
-      - 80:8080
     networks:
       - proxy
       - internal
@@ -20,7 +18,7 @@ services:
     depends_on:
       - db
     labels:
-    # HTTP
+      # HTTP
       - traefik.enable=true
       - traefik.http.routers.firefly.rule=Host(`${HOSTNAME}`)
       - traefik.http.routers.firefly.entrypoints=web
@@ -33,7 +31,7 @@ services:
       - traefik.http.routers.firefly-secure.entrypoints=websecure
       - traefik.http.routers.firefly-secure.tls.certresolver=production
       - traefik.http.routers.firefly-secure.middlewares=authelia@docker
-  
+
   db:
     image: postgres:alpine
     restart: unless-stopped
