@@ -1,0 +1,58 @@
+networks:
+  proxy:
+    external: true
+  internal:
+
+services:
+  firefly:
+    image: fireflyiii/core:latest
+    container_name: firefly
+    restart: unless-stopped
+    ports:
+      - 80:8080
+    networks:
+      - proxy
+      - internal
+    volumes:
+      - /homelab/firefly/data/upload:/var/www/html/storage/upload
+    env_file:
+      - .env
+    depends_on:
+      - db
+    labels:
+    # HTTP
+      - traefik.enable=true
+      - traefik.http.routers.firefly.rule=Host(`${HOSTNAME}`)
+      - traefik.http.routers.firefly.entrypoints=web
+      - traefik.http.routers.firefly.middlewares=firefly-https-redirect
+      - traefik.http.middlewares.firefly-https-redirect.redirectscheme.scheme=websecure
+      - traefik.http.services.firefly.loadbalancer.server.port=8080
+      # HTTPS
+      - traefik.http.routers.firefly-secure.tls=true
+      - traefik.http.routers.firefly-secure.rule=Host(`${HOSTNAME}`)
+      - traefik.http.routers.firefly-secure.entrypoints=websecure
+      - traefik.http.routers.firefly-secure.tls.certresolver=production
+      - traefik.http.routers.firefly-secure.middlewares=authelia@docker
+  
+  db:
+    image: postgres:alpine
+    restart: unless-stopped
+    networks:
+      - internal
+    volumes:
+      - /homelab/firefly/data/db:/var/lib/postgresql/data
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_USER=${DB_USERNAME}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_DATABASE}
+
+  cron:
+    image: alpine
+    restart: unless-stopped
+    networks:
+      - internal
+    env_file:
+      - .env
+    command: sh -c "echo \"0 3 * * * wget -qO- http://firefly/api/v1/cron/${TOKEN}\" | crontab - && crond -f -L /dev/stdout"
